@@ -18,8 +18,9 @@ ffmpeg -v error -y -i raw/hero-full.mp4 \
   -fps_mode vfr raw/seq-d/%03d.png
 
 # Phone: a 3:4 window that follows the subject.
-# Focus x (share of the width): fabric 0.42 -> master frame 0.37 -> wide 0.50.
-F="if(lt(n\,120)\,0.42-0.05*n/120\,0.37+0.13*(n-120)/120)"
+# Focus x (share of the width), measured on the frames: fabric 0.40 -> woman 0.48 -> wide 0.53.
+# crop counts the frames after select, so n runs 0..120.
+F="if(lt(n\,40)\,0.40+0.08*n/40\,0.48+0.05*(n-40)/80)"
 ffmpeg -v error -y -i raw/hero-full.mp4 \
   -vf "select='not(mod(n\,2))',crop=810:1080:'clip(($F)*1920-405\,0\,1110)':0" \
   -fps_mode vfr raw/seq-m/%03d.png
