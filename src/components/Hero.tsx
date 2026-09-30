@@ -3,9 +3,13 @@
 import { useEffect, useRef } from 'react';
 
 const FRAMES = 121;
-/** Desktop frames open with a little sky in one corner; this zoom hides it so the first screen is all cloth. */
-const OPEN_ZOOM = 1.62;
-const OPEN_ORIGIN = { x: 0.15, y: 0.6 };
+/**
+ * The first desktop frame has sky past ~70% of its width. Anchoring a 1.42 zoom to the
+ * left edge hides it, and on a 1440px retina screen that is only ~1.05x the 4K source,
+ * so the opening stays sharp.
+ */
+const OPEN_ZOOM = 1.42;
+const OPEN_ORIGIN = { x: 0, y: 0.5 };
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 /** 0 → 1 between a and b, eased. */
@@ -75,7 +79,8 @@ export function Hero({ first, second, tagline, hint, label, nameAr }: Props) {
     };
 
     const size = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Full device resolution: the frames are native 4K, so there is detail to spend.
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
       cv.width = Math.round(cv.clientWidth * dpr);
       cv.height = Math.round(cv.clientHeight * dpr);
       const nowPortrait = window.innerHeight > window.innerWidth;
@@ -112,6 +117,8 @@ export function Hero({ first, second, tagline, hint, label, nameAr }: Props) {
       const oy = zoom > 1 ? OPEN_ORIGIN.y + (0.5 - OPEN_ORIGIN.y) * ramp(p, 0, 0.16) : 0.5;
       const x = clamp(cv.width / 2 - w * ox, cv.width - w, 0);
       const y = clamp(cv.height / 2 - h * oy, cv.height - h, 0);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(img, x, y, w, h);
     };
 
