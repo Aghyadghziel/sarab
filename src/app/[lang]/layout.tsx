@@ -1,9 +1,11 @@
 import '../globals.css';
 import type { Metadata, Viewport } from 'next';
 import { notFound } from 'next/navigation';
+import { BagDrawer, BagProvider } from '@/components/Bag';
 import { SmoothScroll } from '@/components/SmoothScroll';
-import { COPY, LOCALES, dirOf, isLocale } from '@/lib/content';
+import { COPY } from '@/lib/copy';
 import { fontVariables } from '@/lib/fonts';
+import { LOCALES, dirOf, isLocale } from '@/lib/i18n';
 
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
@@ -14,14 +16,14 @@ export async function generateMetadata({ params }: LayoutProps<'/[lang]'>): Prom
   if (!isLocale(lang)) return {};
   const t = COPY[lang].meta;
   return {
-    title: t.title,
+    title: { default: t.title, template: `%s — ${lang === 'ar' ? 'سراب' : 'SARAB'}` },
     description: t.description,
-    alternates: { canonical: lang === 'ar' ? '/' : '/en', languages: { ar: '/', en: '/en' } },
-    openGraph: { title: t.title, description: t.description, images: ['/img/wide.webp'], locale: lang === 'ar' ? 'ar_SA' : 'en_SA' },
+    alternates: { languages: { ar: '/', en: '/en' } },
+    openGraph: { title: t.title, description: t.description, images: ['/img/p/dahna-sand-campaign.webp'], locale: lang === 'ar' ? 'ar_SA' : 'en_SA' },
   };
 }
 
-export const viewport: Viewport = { themeColor: '#15130f' };
+export const viewport: Viewport = { themeColor: '#f3eee6' };
 
 export default async function RootLayout({ children, params }: LayoutProps<'/[lang]'>) {
   const { lang } = await params;
@@ -29,8 +31,11 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[la
   return (
     <html lang={lang} dir={dirOf(lang)} className={`${fontVariables} antialiased`}>
       <body>
-        <SmoothScroll />
-        {children}
+        <BagProvider>
+          <SmoothScroll />
+          {children}
+          <BagDrawer lang={lang} />
+        </BagProvider>
       </body>
     </html>
   );

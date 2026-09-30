@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 
 const FRAMES = 121;
@@ -21,26 +22,31 @@ const ramp = (p: number, a: number, b: number) => {
 const band = (p: number, a: number, b: number, f = 0.05) => Math.min(ramp(p, a - f, a), 1 - ramp(p, b, b + f));
 
 type Props = {
-  first: string;
-  second: string;
-  tagline: string;
-  hint: string;
   label: string;
-  nameAr: string;
+  collection: string;
+  cloth: string;
+  season: string;
+  shop: string;
+  shopHref: string;
+  hint: string;
+  /** The piece in the film, tagged while the woman is on screen. */
+  tag: { name: string; price: string; cta: string; href: string };
 };
 
 /**
  * The Pull-Back. One camera move scrubbed by scroll: cloth that reads as dunes,
  * then the coat, then the woman, then the whole desert with the logotype in the sky.
  */
-export function Hero({ first, second, tagline, hint, label, nameAr }: Props) {
+export function Hero({ label, collection, cloth, season, shop, shopHref, hint, tag }: Props) {
   const root = useRef<HTMLElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const line1 = useRef<HTMLParagraphElement>(null);
-  const line2 = useRef<HTMLParagraphElement>(null);
+  const tagEl = useRef<HTMLAnchorElement>(null);
   const hintEl = useRef<HTMLDivElement>(null);
   const end = useRef<HTMLDivElement>(null);
+  const cta = useRef<HTMLAnchorElement>(null);
   const heat = useRef<SVGFEDisplacementMapElement>(null);
+  const logo = useRef<HTMLHeadingElement>(null);
   const noise = useRef<SVGFETurbulenceElement>(null);
 
   useEffect(() => {
@@ -125,14 +131,27 @@ export function Hero({ first, second, tagline, hint, label, nameAr }: Props) {
     const overlays = (p: number) => {
       if (line1.current) line1.current.style.opacity = String(band(p, 0, 0.12));
       if (hintEl.current) hintEl.current.style.opacity = String(1 - ramp(p, 0.02, 0.08));
-      if (line2.current) line2.current.style.opacity = String(band(p, 0.3, 0.46));
+      if (tagEl.current) {
+        const v = band(p, 0.34, 0.56, 0.04);
+        tagEl.current.style.opacity = String(v);
+        tagEl.current.style.transform = `translateY(${(1 - v) * 12}px)`;
+        tagEl.current.style.pointerEvents = v > 0.5 ? 'auto' : 'none';
+      }
       const e = ramp(p, 0.74, 0.9);
       if (end.current) {
         end.current.style.opacity = String(e);
         end.current.style.transform = `translateY(${(1 - e) * 24}px)`;
       }
-      // Heat shimmer on the logotype: strong as it appears, gone when the move ends.
-      heat.current?.setAttribute('scale', String(Math.round((1 - ramp(p, 0.78, 0.98)) * 46)));
+      if (cta.current) {
+        const c = ramp(p, 0.84, 0.94);
+        cta.current.style.opacity = String(c);
+        cta.current.style.pointerEvents = c > 0.5 ? 'auto' : 'none';
+      }
+      // Heat shimmer on the logotype: strong as it appears, and switched off
+      // entirely once it settles, so the letters end perfectly sharp.
+      const shimmer = Math.round((1 - ramp(p, 0.76, 0.92)) * 46);
+      heat.current?.setAttribute('scale', String(shimmer));
+      if (logo.current) logo.current.style.filter = shimmer > 0 ? 'url(#heat)' : 'none';
     };
 
     let target = 0;
@@ -161,7 +180,7 @@ export function Hero({ first, second, tagline, hint, label, nameAr }: Props) {
   }, []);
 
   return (
-    <section ref={root} className="relative h-[420svh] bg-ink" aria-label={label}>
+    <section ref={root} data-film className="relative h-[420svh] bg-ink" aria-label={label}>
       <div className="sticky top-0 h-svh w-full overflow-hidden">
         <canvas ref={canvas} className="absolute inset-0 h-full w-full" aria-hidden="true" />
         <div className="grain absolute inset-0" aria-hidden="true" />
@@ -173,38 +192,54 @@ export function Hero({ first, second, tagline, hint, label, nameAr }: Props) {
           </filter>
         </svg>
 
-        <div className="shell absolute inset-x-0 bottom-[14svh] text-bone">
-          <div className="relative">
-            <p ref={line1} className="display absolute bottom-0 text-[clamp(2.5rem,7vw,6.5rem)] [text-shadow:0_2px_30px_rgb(0_0_0/0.35)]">
-              {first}
-            </p>
-            <p ref={line2} className="display absolute bottom-0 text-[clamp(2.5rem,7vw,6.5rem)] opacity-0 [text-shadow:0_2px_30px_rgb(0_0_0/0.45)]">
-              {second}
-            </p>
-          </div>
+        {/* Opening: the cloth, captioned like a lookbook. */}
+        <div className="shell absolute inset-x-0 bottom-[17svh] text-bone md:bottom-[12svh]">
+          <p ref={line1} className="[text-shadow:0_2px_30px_rgb(0_0_0/0.35)]">
+            <span className="label block opacity-85">{collection}</span>
+            <span className="display mt-4 block max-w-[11em] text-[clamp(2.4rem,5.6vw,5.4rem)]">{cloth}</span>
+          </p>
         </div>
 
-        <div ref={hintEl} className="kicker absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 text-bone/80">
+        <div ref={hintEl} className="label absolute inset-x-0 bottom-7 flex flex-col items-center gap-3 text-bone/85">
           <span>{hint}</span>
-          <span className="block h-10 w-px bg-bone/60" />
+          <span className="block h-9 w-px bg-bone/60" />
         </div>
 
-        <div ref={end} className="absolute inset-x-0 top-[11svh] flex flex-col items-center px-5 text-center text-ink opacity-0">
+        {/* While the woman is on screen: the piece she wears, one click from its page. */}
+        <Link
+          ref={tagEl}
+          href={tag.href}
+          className="absolute bottom-[12svh] end-[clamp(1rem,6vw,7rem)] flex items-center gap-4 bg-bone/90 py-3 pe-3 ps-5 text-ink opacity-0 backdrop-blur-sm transition-colors hover:bg-bone"
+          style={{ pointerEvents: 'none' }}
+        >
+          <span className="text-[14px]">
+            {tag.name}
+            <span className="block text-[13px] tabular-nums text-ash">{tag.price}</span>
+          </span>
+          <span className="label bg-ink px-4 py-2.5 text-bone">{tag.cta}</span>
+        </Link>
+
+        {/* Ending: the house mark in the sky, then the way in. */}
+        <div ref={end} className="absolute inset-x-0 top-[12svh] flex flex-col items-center px-5 text-center text-ink opacity-0">
+          <p className="label text-ink/70">
+            {collection} · {season}
+          </p>
           <h1
+            ref={logo}
             dir="ltr"
-            className="font-(family-name:--f-display) text-[clamp(4.5rem,19vw,17rem)] leading-[0.85] tracking-[0.04em]"
-            style={{ filter: 'url(#heat)' }}
+            className="mt-4 font-(family-name:--f-display) text-[clamp(4.2rem,17vw,15rem)] leading-[0.85] tracking-[0.18em] [margin-inline-end:-0.18em]"
           >
             SARAB
           </h1>
-          <p className="mt-3 flex items-center gap-3 text-[clamp(0.95rem,1.5vw,1.25rem)]">
-            <span className="font-(family-name:--f-ar-display)" lang="ar">
-              {nameAr}
-            </span>
-            <span className="block h-px w-8 bg-ink/50" />
-            <span>{tagline}</span>
-          </p>
         </div>
+        <Link
+          ref={cta}
+          href={shopHref}
+          className="label absolute inset-x-0 bottom-[9svh] mx-auto w-fit bg-ink px-7 py-4 text-bone opacity-0 transition-colors hover:bg-ink/85"
+          style={{ pointerEvents: 'none' }}
+        >
+          {shop}
+        </Link>
       </div>
     </section>
   );
