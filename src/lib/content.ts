@@ -23,6 +23,8 @@ export type Piece = {
   fabric: string;
   note: string;
   alt: string;
+  /** A short wind loop that plays over the image; same crop as `image`. */
+  loop?: string;
 };
 
 type Copy = {
@@ -65,12 +67,12 @@ export const COPY: Record<Locale, Copy> = {
       title: 'ست قطع',
       lead: 'كل قطعة مصممة عشان تبان أحلى وهي تتحرك.',
       pieces: [
-        { id: 'dune', no: '01', image: '/img/dune.webp', name: 'معطف الكثيب', fabric: 'صوف وحرير، نسيج مبرد', note: 'طويل للكاحل، وفتحة خلفية تفتح مع المشي.', alt: 'امرأة من الخلف تلبس معطف طويل بلون الجمل وشال يطير مع الهوا' },
-        { id: 'bisht', no: '02', image: '/img/bisht.webp', name: 'قميص البشت', fabric: 'صوف خفيف مغسول', note: 'مفتوح من قدّام، مأخوذ من خط البشت.', alt: 'رجل واقف على كثيب يلبس قميص طويل أبيض مفتوح يطير مع الهوا' },
-        { id: 'wind', no: '03', image: '/img/trousers.webp', name: 'بنطلون الهبوب', fabric: 'كتان مغسول', note: 'خصر عالي ورِجل واسعة مرّة.', alt: 'بنطلون كتان واسع بلون الرمل على كثيب' },
-        { id: 'dawn', no: '04', image: '/img/knit.webp', name: 'سويتر الفجر', fabric: 'صوف مرينو', note: 'رقبة عالية وكمّ يغطي اليد.', alt: 'امرأة من الجنب تلبس سويتر أبيض عظمي برقبة عالية' },
-        { id: 'shawl', no: '05', image: '/img/scarf.webp', name: 'الشال', fabric: 'صوف ناعم بأهداب قصيرة', note: 'طويل كفاية عشان يطير.', alt: 'شال صوف بلون الجمل يطير أفقي في الهوا فوق الكثبان' },
-        { id: 'night', no: '06', image: '/img/night.webp', name: 'معطف الليل', fabric: 'صوف نيلي', note: 'نفس قصّة الكثيب، بلون السما بعد المغرب.', alt: 'امرأة من الخلف تلبس معطف طويل نيلي وقت الغروب' },
+        { id: 'dune', no: '01', image: '/img/dune.webp', loop: '/loops/dune.mp4', name: 'معطف الكثيب', fabric: 'صوف وحرير، نسيج مبرد', note: 'طويل للكاحل، وفتحة خلفية تفتح مع المشي.', alt: 'امرأة من الخلف تلبس معطف طويل بلون الجمل وشال يطير مع الهوا' },
+        { id: 'bisht', no: '02', image: '/img/bisht.webp', loop: '/loops/bisht.mp4', name: 'قميص البشت', fabric: 'صوف خفيف مغسول', note: 'مفتوح من قدّام، مأخوذ من خط البشت.', alt: 'رجل واقف على كثيب يلبس قميص طويل أبيض مفتوح يطير مع الهوا' },
+        { id: 'wind', no: '03', image: '/img/trousers.webp', loop: '/loops/wind.mp4', name: 'بنطلون الهبوب', fabric: 'كتان مغسول', note: 'خصر عالي ورِجل واسعة مرّة.', alt: 'بنطلون كتان واسع بلون الرمل على كثيب' },
+        { id: 'dawn', no: '04', image: '/img/knit.webp', loop: '/loops/dawn.mp4', name: 'سويتر الفجر', fabric: 'صوف مرينو', note: 'رقبة عالية وكمّ يغطي اليد.', alt: 'امرأة من الجنب تلبس سويتر أبيض عظمي برقبة عالية' },
+        { id: 'shawl', no: '05', image: '/img/scarf.webp', loop: '/loops/shawl.mp4', name: 'الشال', fabric: 'صوف ناعم بأهداب قصيرة', note: 'طويل كفاية عشان يطير.', alt: 'شال صوف بلون الجمل يطير أفقي في الهوا فوق الكثبان' },
+        { id: 'night', no: '06', image: '/img/night.webp', loop: '/loops/night.mp4', name: 'معطف الليل', fabric: 'صوف نيلي', note: 'نفس قصّة الكثيب، بلون السما بعد المغرب.', alt: 'امرأة من الخلف تلبس معطف طويل نيلي وقت الغروب' },
       ],
     },
     cloth: {
@@ -133,12 +135,12 @@ export const COPY: Record<Locale, Copy> = {
       title: 'Six pieces',
       lead: 'Each piece is designed to look its best in motion.',
       pieces: [
-        { id: 'dune', no: '01', image: '/img/dune.webp', name: 'Dune coat', fabric: 'Wool and silk twill', note: 'Ankle length, with a back vent that opens as you walk.', alt: 'Woman seen from behind in a long camel coat, her scarf flying in the wind' },
-        { id: 'bisht', no: '02', image: '/img/bisht.webp', name: 'Bisht overshirt', fabric: 'Light washed wool', note: 'Open at the front, drawn from the line of the bisht.', alt: 'Man on a dune in a long open white overshirt lifted by the wind' },
-        { id: 'wind', no: '03', image: '/img/trousers.webp', name: 'Wind trousers', fabric: 'Washed linen', note: 'High waist and a very wide leg.', alt: 'Wide sand-coloured linen trousers on a dune' },
-        { id: 'dawn', no: '04', image: '/img/knit.webp', name: 'Dawn knit', fabric: 'Merino wool', note: 'Funnel neck and sleeves that cover the hand.', alt: 'Woman in profile wearing a bone-white funnel-neck knit' },
-        { id: 'shawl', no: '05', image: '/img/scarf.webp', name: 'The scarf', fabric: 'Fine wool, short fringe', note: 'Long enough to fly.', alt: 'Camel wool scarf flying flat in the wind above the dunes' },
-        { id: 'night', no: '06', image: '/img/night.webp', name: 'Night coat', fabric: 'Indigo wool', note: 'The Dune cut, in the colour of the sky after sunset.', alt: 'Woman seen from behind in a long indigo coat at dusk' },
+        { id: 'dune', no: '01', image: '/img/dune.webp', loop: '/loops/dune.mp4', name: 'Dune coat', fabric: 'Wool and silk twill', note: 'Ankle length, with a back vent that opens as you walk.', alt: 'Woman seen from behind in a long camel coat, her scarf flying in the wind' },
+        { id: 'bisht', no: '02', image: '/img/bisht.webp', loop: '/loops/bisht.mp4', name: 'Bisht overshirt', fabric: 'Light washed wool', note: 'Open at the front, drawn from the line of the bisht.', alt: 'Man on a dune in a long open white overshirt lifted by the wind' },
+        { id: 'wind', no: '03', image: '/img/trousers.webp', loop: '/loops/wind.mp4', name: 'Wind trousers', fabric: 'Washed linen', note: 'High waist and a very wide leg.', alt: 'Wide sand-coloured linen trousers on a dune' },
+        { id: 'dawn', no: '04', image: '/img/knit.webp', loop: '/loops/dawn.mp4', name: 'Dawn knit', fabric: 'Merino wool', note: 'Funnel neck and sleeves that cover the hand.', alt: 'Woman in profile wearing a bone-white funnel-neck knit' },
+        { id: 'shawl', no: '05', image: '/img/scarf.webp', loop: '/loops/shawl.mp4', name: 'The scarf', fabric: 'Fine wool, short fringe', note: 'Long enough to fly.', alt: 'Camel wool scarf flying flat in the wind above the dunes' },
+        { id: 'night', no: '06', image: '/img/night.webp', loop: '/loops/night.mp4', name: 'Night coat', fabric: 'Indigo wool', note: 'The Dune cut, in the colour of the sky after sunset.', alt: 'Woman seen from behind in a long indigo coat at dusk' },
       ],
     },
     cloth: {

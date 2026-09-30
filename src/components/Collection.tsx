@@ -1,13 +1,51 @@
 'use client';
 
 import Image from 'next/image';
-import { useRef, type PointerEvent } from 'react';
+import { useEffect, useRef, useState, type PointerEvent } from 'react';
 import type { Piece } from '@/lib/content';
 import { Reveal } from './Reveal';
 
-/** The image leans a little toward the pointer, like cloth catching a gust. */
+const LEAN = '[transform:translate3d(var(--x,0),var(--y,0),0)_scale(1.06)] group-hover:[transform:translate3d(var(--x,0),var(--y,0),0)_scale(1.1)]';
+
+/**
+ * The image leans a little toward the pointer, like cloth catching a gust, and the
+ * piece's wind loop plays over it: on hover with a mouse, while on screen by touch.
+ * The loop only downloads once the card is near the screen.
+ */
 function Card({ piece, index }: { piece: Piece; index: number }) {
   const frame = useRef<HTMLDivElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
+  const [near, setNear] = useState(false);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const el = frame.current;
+    if (!el || !piece.loop || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Start loading a little before the card arrives.
+    const nearIo = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: '300px 0px' });
+    nearIo.observe(el);
+    // By touch there is no hover, so play while the card is mostly on screen. This one has
+    // no margin: a margin would count toward the ratio and play cards still off screen.
+    const touch = window.matchMedia('(hover: none)').matches;
+    const viewIo = new IntersectionObserver(
+      ([e]) => {
+        const v = video.current;
+        if (!touch || !v) return;
+        if (e.intersectionRatio > 0.6) v.play().catch(() => {});
+        else v.pause();
+      },
+      { threshold: [0, 0.6] },
+    );
+    viewIo.observe(el);
+    return () => {
+      nearIo.disconnect();
+      viewIo.disconnect();
+    };
+  }, [piece.loop, near]);
+
+  const enter = (e: PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'mouse') video.current?.play().catch(() => {});
+  };
   const move = (e: PointerEvent<HTMLDivElement>) => {
     if (e.pointerType !== 'mouse' || !frame.current) return;
     const r = frame.current.getBoundingClientRect();
@@ -16,21 +54,36 @@ function Card({ piece, index }: { piece: Piece; index: number }) {
     frame.current.style.setProperty('--x', `${x * -14}px`);
     frame.current.style.setProperty('--y', `${y * -14}px`);
   };
-  const leave = () => {
+  const leave = (e: PointerEvent<HTMLDivElement>) => {
     frame.current?.style.setProperty('--x', '0px');
     frame.current?.style.setProperty('--y', '0px');
+    if (e.pointerType === 'mouse') video.current?.pause();
   };
   return (
     <Reveal delay={(index % 3) * 90} className={index % 3 === 1 ? 'lg:mt-24' : ''}>
       <article className="group">
-        <div ref={frame} onPointerMove={move} onPointerLeave={leave} className="relative aspect-[3/4] overflow-hidden bg-night/40">
+        <div ref={frame} onPointerEnter={enter} onPointerMove={move} onPointerLeave={leave} className="relative aspect-[3/4] overflow-hidden bg-night/40">
           <Image
             src={piece.image}
             alt={piece.alt}
             fill
             sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw"
-            className="scale-[1.06] object-cover transition-transform duration-[1200ms] ease-out-soft [transform:translate3d(var(--x,0),var(--y,0),0)_scale(1.06)] group-hover:[transform:translate3d(var(--x,0),var(--y,0),0)_scale(1.1)]"
+            className={`object-cover transition-transform duration-[1200ms] ease-out-soft ${LEAN}`}
           />
+          {piece.loop && near && (
+            <video
+              ref={video}
+              src={piece.loop}
+              muted
+              loop
+              playsInline
+              preload="auto"
+              aria-hidden="true"
+              onPlaying={() => setPlaying(true)}
+              onPause={() => setPlaying(false)}
+              className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-[700ms,1200ms] ease-out-soft ${LEAN} ${playing ? 'opacity-100' : 'opacity-0'}`}
+            />
+          )}
           <span className="absolute start-4 top-4 text-sm tabular-nums text-bone/90 mix-blend-difference">{piece.no}</span>
         </div>
         <div className="mt-5 flex items-baseline justify-between gap-4">
