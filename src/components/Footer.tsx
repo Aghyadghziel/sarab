@@ -2,11 +2,12 @@ import Link from 'next/link';
 import { COPY, SIMA_URL } from '@/lib/copy';
 import { href, type Locale } from '@/lib/i18n';
 import { Logo } from './Logo';
+import { Mirage } from './Mirage';
 
 export function Footer({ lang }: { lang: Locale }) {
   const t = COPY[lang];
   const f = t.footer;
-  const help = ['/story#delivery', '/story#delivery', '/product/dahna-coat#size', '/story#care'];
+  const help = ['/story#delivery', '/story#returns', '/product/dahna-coat#size', '/story#care'];
   const house = ['/story', '/shop'];
   return (
     <footer className="border-t hairline bg-bone">
@@ -52,6 +53,7 @@ export function Footer({ lang }: { lang: Locale }) {
           </ul>
         </div>
       </div>
+      <Mirage className="shell pt-4 text-[clamp(3.6rem,18vw,17rem)] text-ink" />
       <div className="shell flex flex-wrap items-center justify-between gap-4 border-t hairline py-6 text-[13px] text-ash">
         <p>{f.rights}</p>
         <p>

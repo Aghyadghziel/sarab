@@ -62,15 +62,17 @@ export default async function StoryPage({ params }: PageProps<'/[lang]/story'>) 
           ))}
         </section>
 
-        <section className="shell grid grid-cols-1 gap-12 pb-24 md:grid-cols-2">
-          <div id="delivery" className="scroll-mt-28">
-            <h2 className="label">{t.product.delivery}</h2>
-            <p className="mt-4 max-w-[46ch] leading-relaxed text-ink/80">{t.product.deliveryText}</p>
-          </div>
-          <div id="care" className="scroll-mt-28">
-            <h2 className="label">{t.product.fabric}</h2>
-            <p className="mt-4 max-w-[46ch] leading-relaxed text-ink/80">{s.principles[0].text}</p>
-          </div>
+        <section className="shell grid grid-cols-1 gap-12 pb-24 md:grid-cols-3">
+          {[
+            { id: 'delivery', title: t.service[0].title, text: t.service[0].text },
+            { id: 'returns', title: t.service[1].title, text: t.service[1].text },
+            { id: 'care', title: s.care.title, text: s.care.text },
+          ].map((b) => (
+            <div key={b.id} id={b.id} className="scroll-mt-28">
+              <h2 className="label">{b.title}</h2>
+              <p className="mt-4 max-w-[46ch] leading-relaxed text-ink/80">{b.text}</p>
+            </div>
+          ))}
         </section>
 
         <section className="border-t hairline py-20 text-center">

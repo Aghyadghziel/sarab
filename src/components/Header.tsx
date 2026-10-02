@@ -79,7 +79,13 @@ export function Header({ lang, overFilm = false }: { lang: Locale; overFilm?: bo
             </Link>
             <button type="button" onClick={() => setOpen(true)} className="label -me-2 p-2">
               {t.bag}
-              <span className="tabular-nums"> ({count})</span>
+              <span className="tabular-nums">
+                {' ('}
+                <span key={count} className={count ? 'bump' : undefined}>
+                  {count}
+                </span>
+                {')'}
+              </span>
             </button>
           </div>
         </div>

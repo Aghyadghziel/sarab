@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import { notFound } from 'next/navigation';
 import { BagDrawer, BagProvider } from '@/components/Bag';
 import { SmoothScroll } from '@/components/SmoothScroll';
-import { COPY } from '@/lib/copy';
+import { COPY, SITE_URL } from '@/lib/copy';
 import { fontVariables } from '@/lib/fonts';
 import { LOCALES, dirOf, isLocale } from '@/lib/i18n';
 
@@ -16,6 +16,7 @@ export async function generateMetadata({ params }: LayoutProps<'/[lang]'>): Prom
   if (!isLocale(lang)) return {};
   const t = COPY[lang].meta;
   return {
+    metadataBase: new URL(SITE_URL),
     title: { default: t.title, template: `%s — ${lang === 'ar' ? 'سراب' : 'SARAB'}` },
     description: t.description,
     alternates: { languages: { ar: '/', en: '/en' } },

@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useRef, useState, ViewTransition } from 'react';
 import type { Product } from '@/lib/catalog';
 import { COPY } from '@/lib/copy';
 import { href, price, type Locale } from '@/lib/i18n';
@@ -23,36 +23,39 @@ export function ProductCard({ product, lang, priority = false, sizes }: { produc
       onPointerEnter={(e) => e.pointerType === 'mouse' && video.current?.play().catch(() => {})}
       onPointerLeave={() => video.current?.pause()}
     >
-      <Link href={url} className="relative block aspect-[3/4] overflow-hidden bg-paper">
-        <Image
-          src={colour.images.studio}
-          alt={`${product.name[lang]}, ${colour.name[lang]}`}
-          fill
-          priority={priority}
-          sizes={sizes ?? '(min-width: 1024px) 25vw, 50vw'}
-          className="object-cover"
-        />
-        <Image
-          src={colour.images.campaign}
-          alt=""
-          aria-hidden="true"
-          fill
-          sizes={sizes ?? '(min-width: 1024px) 25vw, 50vw'}
-          className="object-cover opacity-0 transition-opacity duration-700 ease-out-soft [@media(hover:hover)]:group-hover:opacity-100"
-        />
-        {colour.loop && (
-          <video
-            ref={video}
-            src={colour.loop}
-            muted
-            loop
-            playsInline
-            preload="none"
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700 [@media(hover:hover)]:group-hover:opacity-100"
+      {/* Shares its name with the first image on the product page, so the photo grows into place. */}
+      <ViewTransition name={`product-${product.slug}`} share="morph" default="none">
+        <Link href={url} className="relative block aspect-[3/4] overflow-hidden bg-paper">
+          <Image
+            src={colour.images.studio}
+            alt={`${product.name[lang]}, ${colour.name[lang]}`}
+            fill
+            priority={priority}
+            sizes={sizes ?? '(min-width: 1024px) 25vw, 50vw'}
+            className="object-cover"
           />
-        )}
-      </Link>
+          <Image
+            src={colour.images.campaign}
+            alt=""
+            aria-hidden="true"
+            fill
+            sizes={sizes ?? '(min-width: 1024px) 25vw, 50vw'}
+            className="object-cover opacity-0 transition-opacity duration-700 ease-out-soft [@media(hover:hover)]:group-hover:opacity-100"
+          />
+          {colour.loop && (
+            <video
+              ref={video}
+              src={colour.loop}
+              muted
+              loop
+              playsInline
+              preload="none"
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700 [@media(hover:hover)]:group-hover:opacity-100"
+            />
+          )}
+        </Link>
+      </ViewTransition>
       <div className="mt-3 flex items-start justify-between gap-3 text-[14px]">
         <div className="min-w-0">
           <h3 className="truncate">

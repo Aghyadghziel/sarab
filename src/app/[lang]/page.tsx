@@ -7,6 +7,7 @@ import { Hero } from '@/components/Hero';
 import { Parallax } from '@/components/Parallax';
 import { ProductCard } from '@/components/ProductCard';
 import { Reveal } from '@/components/Reveal';
+import { Sunset } from '@/components/Sunset';
 import { PRODUCTS, bySlug } from '@/lib/catalog';
 import { COPY } from '@/lib/copy';
 import { href, isLocale, price } from '@/lib/i18n';
@@ -102,6 +103,7 @@ export default async function Home({ params }: PageProps<'/[lang]'>) {
                 <p className="label text-bone/60">{h.nightKicker}</p>
                 <h2 className="display mt-5 max-w-[16ch] text-[clamp(2.3rem,3.8vw,3.8rem)]">{h.nightTitle}</h2>
                 <p className="mt-6 max-w-[40ch] leading-relaxed text-bone/75">{h.nightBody}</p>
+                <Sunset lang={lang} />
                 <Link href={href(lang, '/product/layl-abaya')} className="label mt-8 inline-flex bg-bone px-7 py-4 text-ink transition-opacity hover:opacity-85">
                   {h.nightCta}
                 </Link>

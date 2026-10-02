@@ -47,6 +47,8 @@ const ar = {
     nightTitle: 'عباءة ليل ومعطف الدهناء بلون الليل',
     nightBody: 'كريب حبري وصوف نيلي للأمسيات الباردة. القصّة نفسها، والوزن نفسه، بلون السماء بعد المغرب.',
     nightCta: 'تسوّقي عباءة ليل',
+    sunsetAhead: (time: string) => `تغرب الشمس في الرياض اليوم الساعة ${time}.`,
+    sunsetPast: (time: string) => `غربت الشمس في الرياض اليوم الساعة ${time}. هذه ساعة هذه القطع.`,
     storyKicker: 'القصة',
     storyTitle: 'ملابس مفصّلة للصحراء',
     storyBody: 'نبدأ كل قطعة من الريح والضوء المنخفض. قماش له وزن، قصّات واسعة، وألوان من الرمل.',
@@ -79,6 +81,9 @@ const ar = {
     home: 'الرئيسية',
     oneSize: 'مقاس واحد',
     gallery: (name: string, n: number) => `${name}، صورة ${n}`,
+    zoom: 'تكبير',
+    prev: 'السابقة',
+    next: 'التالية',
   },
   sizeGuide: {
     title: 'دليل المقاسات',
@@ -125,6 +130,10 @@ const ar = {
       { title: 'قصّات واسعة', text: 'كتف منسدل وأكمام عريضة وأطوال كاملة تتحرك مع الجسم.' },
       { title: 'كميات قليلة', text: 'نصنع كل قطعة بعدد محدود، ونعيد إنتاج ما يُطلب فقط.' },
     ],
+    care: {
+      title: 'العناية بالقطع',
+      text: 'يُنظَّف الصوف بالفرشاة بعد كل لبسة، ويُعلَّق على علاقة عريضة ليرتاح. المعاطف والعباءات للتنظيف الجاف فقط، والكتان يُغسل باليد بماء بارد. يُبعَد الجلد عن الماء، ويُغذّى مرة كل موسم.',
+    },
     cta: 'تسوّق المجموعة الأولى',
   },
   footer: {
@@ -136,7 +145,13 @@ const ar = {
     by: 'تصميم وتنفيذ',
     rights: '© 2026 سراب',
   },
-  notFound: { title: 'هذه الصفحة غير موجودة.', cta: 'العودة إلى المتجر' },
+  notFound: {
+    kicker: 'خطأ 404',
+    title: 'سراب.',
+    body: 'ما رأيته من بعيد لم يكن هنا. الصفحة التي تبحث عنها غير موجودة، أو انتقلت.',
+    cta: 'العودة إلى المتجر',
+    suggest: 'قطع قد تبحث عنها',
+  },
 };
 
 type Copy = typeof ar;
@@ -183,6 +198,8 @@ const en: Copy = {
     nightTitle: 'The Layl abaya and the Dahna coat in Night',
     nightBody: 'Ink crepe and indigo wool for cool evenings. The same cut and weight, in the colour of the sky after sunset.',
     nightCta: 'Shop the Layl abaya',
+    sunsetAhead: (time: string) => `The sun sets over Riyadh today at ${time}.`,
+    sunsetPast: (time: string) => `The sun set over Riyadh today at ${time}. This is the hour these pieces are for.`,
     storyKicker: 'Story',
     storyTitle: 'Clothes cut for the desert',
     storyBody: 'Every piece starts with the wind and low light. Cloth with weight, wide cuts, and colours taken from the sand.',
@@ -215,6 +232,9 @@ const en: Copy = {
     home: 'Home',
     oneSize: 'One size',
     gallery: (name: string, n: number) => `${name}, image ${n}`,
+    zoom: 'Zoom',
+    prev: 'Previous',
+    next: 'Next',
   },
   sizeGuide: {
     title: 'Size guide',
@@ -261,6 +281,10 @@ const en: Copy = {
       { title: 'Wide cuts', text: 'Dropped shoulders, broad sleeves and full lengths that move with the body.' },
       { title: 'Small runs', text: 'Each piece is made in limited numbers, and remade only when it is asked for.' },
     ],
+    care: {
+      title: 'Care',
+      text: 'Brush wool after each wear and let it rest on a wide hanger. Coats and abayas are dry clean only; wash linen by hand in cold water. Keep leather away from water and feed it once a season.',
+    },
     cta: 'Shop Collection 01',
   },
   footer: {
@@ -272,10 +296,17 @@ const en: Copy = {
     by: 'Design and build',
     rights: '© 2026 SARAB',
   },
-  notFound: { title: 'This page does not exist.', cta: 'Back to the store' },
+  notFound: {
+    kicker: 'Error 404',
+    title: 'A mirage.',
+    body: 'What you saw from afar was never here. The page you are looking for does not exist, or it has moved.',
+    cta: 'Back to the store',
+    suggest: 'Pieces you may be looking for',
+  },
 };
 
 export const COPY: Record<Locale, Copy> = { ar, en };
 export type { Copy };
 
 export const SIMA_URL = 'https://www.simastudio.it.com';
+export const SITE_URL = 'https://sarab-theta.vercel.app';

@@ -147,3 +147,82 @@ details[open] .acc-sign {
     transition: none;
   }
 }
+
+/* The mirage strips under the sun drift like air over hot sand. */
+.mirage-strip {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: mirage 3.6s ease-in-out infinite alternate;
+}
+@keyframes mirage {
+  0% {
+    transform: translateX(-6%) scaleX(0.92);
+  }
+  50% {
+    transform: translateX(4%) scaleX(1.06);
+  }
+  100% {
+    transform: translateX(-2%) scaleX(0.97);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mirage-strip {
+    animation: none;
+  }
+}
+
+/* Card photo → product photo. A slight blur mid-flight hides the scaling. */
+::view-transition-group(.morph) {
+  animation-duration: 560ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: via-blur;
+}
+@keyframes via-blur {
+  35% {
+    filter: blur(4px);
+  }
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+}
+
+.zoom-in {
+  animation: zoom-in 0.45s var(--ease-out-soft) both;
+}
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.mirage-band {
+  animation: band calc(4.2s + var(--i) * 0.7s) ease-in-out calc(var(--i) * -0.9s) infinite alternate;
+}
+@keyframes band {
+  from {
+    transform: translateX(-0.6%) scaleX(0.995);
+  }
+  to {
+    transform: translateX(0.8%) scaleX(1.01);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mirage-band {
+    animation: none;
+  }
+}
+
+/* The bag count ticks when a piece is added. */
+.bump {
+  display: inline-block;
+  animation: bump 0.6s var(--ease-out-soft);
+}
+@keyframes bump {
+  30% {
+    transform: translateY(-35%);
+    color: var(--color-copper);
+  }
+}
